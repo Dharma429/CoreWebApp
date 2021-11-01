@@ -1,0 +1,216 @@
+﻿
+@{
+    Layout = null;
+     
+}
+<!DOCTYPE html>
+<html>
+<head>   
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"] - CoreWebApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+
+
+    <link rel="stylesheet" href="~/css/hmenuform.css" type="text/css">
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="~/img/Abrao Group Square Logo.ico" type="image/x-icon" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="~/js/paging.js"></script>
+    <script type="text/javascript">
+        var countryId = 0;
+        function clear() {
+            countryId = 0;
+            $("#txtCompany").val("");
+            $("#txtCountry").val("");
+            $("#txtAddress").val("");
+            $("#txtCity").val("");
+            $("#txtPincode").val("");
+            $("#txtMobNumber").val("");
+        }
+        function gridTable(data) {
+
+            $('#gridTable').html("");
+            var headerRow = '<thead><tr>' +
+                '<th>  Name</th >' +
+                '<th>Skills #</th>' +
+                '<th>TotalStudents #</th>' +
+                '<th>Salary #</th>' +
+                '<th>Date #</th>'
+            '</tr > </thead>';
+
+            $("#gridTable").append(headerRow);
+            var row$;
+            if (data.length > 0) {
+                $.each(data, function (id, val) {
+                    var row = '<tr>' +
+                        '<td hidden="true">' + val.Id + '</td>' +
+                        '<td class="center"><a href="#" onclick="pop(' + val.Id + ')">' + val.Name + '</td>' +
+                        '<td class="center">' + val.Skills + '</td>' +
+                        '<td class="center">' + val.TotalStudents + '</td>' +
+                        '<td class="center">' + val.Salary + '</td>' +
+                        '<td class="center">' + val.AddedOn + '</td>'
+                    '</tr>'
+
+                    row$ = row$ + row;
+                });
+            }
+            var tbody = "<tbody>" + row$ + "</tbody>";
+            $("#gridTable").append(tbody);
+            $('#gridTable').paging({ limit: 2 });
+        }
+        function gridCall() {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/SearchData',
+                data: JSON.stringify({}),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data) {
+                        gridTable(data);
+                    }
+                    else {
+                        alert("fail");
+                    }
+
+                }
+
+            });
+        }
+        $(document).ready(function () {
+            gridCall();
+
+            $("#btnSubmit").click(function (event) {
+
+
+                var companyDetail = {
+                    Id: 0,
+                    Name: $("#txtCompany").val(),
+                    Skills: $("#txtAddress").val(),
+                    TotalStudents: $("#txtCity").val(),
+                    Salary: $("#txtPincode").val(),
+                    AddedOn: $("#txtDate").val()
+
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/SaveCompanyDetails',
+                    data: JSON.stringify(companyDetail),
+                    dataType: 'json',                  
+                    async: true,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data) {
+                            if (data == "-1") {
+                                alert("fail");
+                            }
+                            else {
+                                alert("success");
+                                gridCall();
+                                clear();
+
+                            }
+                        }
+                    },
+                });
+
+
+            });
+
+        });
+    </script>
+</head>
+    <body>
+        <header>
+            <div class="header">
+                <img src="~/img/Fendercare Logo.jpg" height="46" width="160">
+                <div class="header-center">
+                    Fendercare Omega Customer Portal
+                </div>
+                <div class="header-right">
+                    <a href="/Home/Index"><i class="fa fa-home"></i> Home</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">
+                          "Ram"
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#profile">My Profile</a>
+                            <a href="#logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <form>
+            <div class="container">
+                <p></p>
+                <div class="row">
+                    <h3>My Portal</h3>
+                    <div class="column">
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label for="">Name</label>
+                            <input type="text" placeholder="Enter company name.." name="txtCompany" id="txtCompany" autocomplete="off" required tabindex=1>
+                        </div>
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label for="">Skills</label>
+                            <input type="text" placeholder="Enter Skills.." name="txtCountry" id="txtCountry" autocomplete="off" required tabindex=3>
+                        </div>
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label for="">TotalStudents</label>
+                            <input type="text" placeholder="Enter TotalStudents" name="txtCity" id="txtCity" autocomplete="off" required tabindex=5>
+                        </div>
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label for="">Salary</label>
+                            <input type="text" placeholder="Enter Salary.." name="txtPincode" id="txtPincode" autocomplete="off" required tabindex=7>
+                        </div>
+                        <div class="col-25">
+                        </div>
+                        <div class="col-75">
+                            <label for="">Date</label>
+                            <input type="date" placeholder="Select from date" name="" id="txtDate" tabindex=5>
+                        </div>
+                    </div>
+                    <div class="column-10">
+                    </div>
+                    <div class="column">                       
+                        <br>&nbsp;<br>
+                        <button type="reset" class="canbtn">Cancel</button>
+                        <button type="submit" id="btnSubmit" class="genbtn"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                        <p></p>
+                    </div>
+                </div>
+                <p></p><br>
+                <div class="row">
+                    <h3>Results</h3>
+                    <p></p>
+                    <div class="tablediv">
+                        <table class="gentable" id="gridTable"></table>
+                    </div>
+                    <p></p>
+                    <p></p>
+                </div>
+                <br>
+                <br>
+            </div>
+        </form>
+    </body>
+</html>
+
+
