@@ -9,7 +9,11 @@ namespace CoreWebApp.Models
     public class CoreDBContext : DbContext
     {
         public CoreDBContext(DbContextOptions<CoreDBContext> dbContextOptions) : base(dbContextOptions) { }
-        public DbSet<Teacher> Teacher { get; set; }
+        // public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<TranslationViewModel> TranslationViewModel { get; set; }
+        public DbSet<LanguageModel> LanguageModel { get; set; }
+
+        public DbSet<Role> Role { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -20,17 +24,15 @@ namespace CoreWebApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Inside the ‘OnModelCreating()’ method I have specified the column types, max length and SQL types for these properties.
-            modelBuilder.Entity<Teacher>(entity =>
-            {
-                entity.Property(e => e.Salary)
-                    .IsRequired()
-                    .HasColumnType("money");
-                entity.Property(e => e.AddedOn)
-                   .HasColumnType("date")
-                   .HasDefaultValueSql("(getdate())");
+            modelBuilder.Entity<TranslationViewModel>().HasNoKey();
 
-            });
+            modelBuilder.Entity<LanguageModel>().HasNoKey();
+
+           
+
+
+            //Inside the ‘OnModelCreating()’ method I have specified the column types, max length and SQL types for these properties.
+
         }
     }
 }

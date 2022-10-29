@@ -25,25 +25,25 @@ namespace CoreWebApp.Controllers
         }
 
 
-        public List<Teacher> SearchData()
+        public List<Role> SearchData()
         {
-            List<Teacher> list = _coreDBContext.Teacher.ToList();
+            List<Role> list = _coreDBContext.Role.ToList();
             return list;
         }
 
 
         public JsonResult SearchList()
         {
-            List<Teacher> list = _coreDBContext.Teacher.ToList();
+            List<Role> list = _coreDBContext.Role.ToList();
            
             return Json(list);
         }
 
         [HttpPost]
-        public JsonResult SaveCompanyDetails([FromBody] Teacher companyDetails)
+        public JsonResult SaveCompanyDetails([FromBody] Role role)
         {
 
-            _coreDBContext.Teacher.Add(companyDetails);
+            _coreDBContext.Role.Add(role);
             _coreDBContext.SaveChanges();
             return Json(new { });
         }
